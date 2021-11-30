@@ -1,0 +1,18 @@
+
+0- elegir la dificultad (dar a conocer las bombas)
+1- se eligen los barcos al azar(coordenadas random)
+2- se determina la orientacion con random
+4- se crea el tablero con los barcos
+5- ingresa coordenas para determinar si es fuego o agua( se pregunta si en esa pocision hay barco)
+win condition: hundir todos los barcos
+lose condition: quedarse sin bombas y no haber hundido todos los barcos
+
+SISTEMA PARA LOS BARCOS
+preguntar si hay un barco en la posicion q determina el usuario
+si hay un barco, cambiar los tags y restar las bombas, imprimie un "B" en el la coordenada indicada
+si no hay braco, restar bomba, imprimir un "*" en la coordenada indicada
+
+Para Ingresar barcos 
+
+
+!! CAMBIAR NOMBRES DE COSAS !!

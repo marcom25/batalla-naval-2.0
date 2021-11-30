@@ -1,0 +1,137 @@
+// SEBASTIAN MARTIN PONCE, MARCO MIGNACCO, SANTIAGO PEREZ.
+import java.util.InputMismatchException;
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        GameManager mecanismos = new GameManager();
+        Scanner entrada = new Scanner(System.in);
+        int opcion = 0;
+        int contador = 0;
+        int inInt1 = 0;
+        int inInt2 = 0;
+        int inInt3 = 0;
+        
+        int orientacionMain;
+        
+        Boolean flag = true;
+        Boolean flag1 = false;
+        
+        mecanismos.crearTablero();
+        System.out.println("Por favor, indique la dificultad: \n(1) Baja. \n(2) Media. \n(3) Alta.");
+
+        while (flag1 == false) {
+            try {
+                opcion = entrada.nextInt();
+            } catch (InputMismatchException er1) {
+                System.out.println("Por favor, indique la dificultad (Ingrese un numero): \n(1) Baja. \n(2) Media. \n(3) Alta.");
+                entrada.next();
+                continue;
+            }
+            if (opcion >= 1 && opcion <= 3) {
+                mecanismos.elegirDificultad(opcion);
+                flag1 = true;
+            }else{
+                System.out.println("Ingrese un numero dentro de los parametros pedidos.");
+                continue;
+            }
+        }
+          
+        while(contador < 5){
+            mecanismos.cargarDatos(contador);
+            System.out.println("Por favor, indique la orientacion del barco " + mecanismos.buque[mecanismos.filas][mecanismos.columnas].getNombre() + ". \n(1) Orientacion horizontal. \n(2) Orientacion vertical.");
+            // try{
+                inInt3 = entrada.nextInt();
+                entrada.nextLine();
+            // }
+            // catch(InputMismatchException er2){
+            //     System.out.println("Por favor, indique la orientacion del barco (Ingresando un Numero 1 o 2) " + mecanismos.buque[mecanismos.filas][mecanismos.columnas].getNombre() + ". \n(1) Orientacion horizontal. \n(2) Orientacion vertical.");
+            //     entrada.next();
+            //     continue;
+            // }
+            // if (inInt3 == 1 || inInt3 == 2) {
+                mecanismos.buque[mecanismos.filas][mecanismos.columnas].setOrientacion(inInt3);
+                orientacionMain = mecanismos.buque[mecanismos.filas][mecanismos.columnas].getOrientacion();
+                mecanismos.introducirBuque(orientacionMain);         
+            // }else{
+            //     System.out.println("Ingrese un numero dentro de los parametros pedidos.");
+            //     // continue;
+            // }
+            contador++;
+        }
+
+        while (mecanismos.getBombas() > 0 && mecanismos.getVida() > 0) {
+            mecanismos.mostrarTablero();
+            System.out.println("Cantidad de bombas: " + mecanismos.getBombas());
+            
+            
+            while (flag == true) {
+                if (mecanismos.getCoordenadaFila() < 1 || mecanismos.getCoordenadaFila() > 10) {
+                    System.out.print("Ingrese la FILA (del 1 al 10): ");
+                    // try {
+                        inInt1 = entrada.nextInt();
+                    // } catch (InputMismatchException er3) {
+                        // System.out.println("Ingrese un numero (1 al 10)\n");;
+                        // entrada.next();
+                        // continue;
+                    // }
+                    if (inInt1 > 0 && inInt1 <= 10) {
+                        mecanismos.setCoordenadaFila(inInt1);
+                    }else{
+                        System.out.println("Ingrese un numero dentro de los parametros pedidos.\n");
+                        // continue;
+                    }
+                }else   
+                    flag = false;
+            }
+
+            flag = true;
+
+            while (flag == true) {
+                if (mecanismos.getCoordenadaColumna() < 1 || mecanismos.getCoordenadaColumna() > 10) {
+                    System.out.print("Ingrese la COLUMNA (del 1 al 10): ");
+                    // try {
+                        inInt2 = entrada.nextInt();
+                    // } catch (InputMismatchException er4) {
+                        // System.out.println("Ingrese un numero (1 al 10)\n");;
+                        // entrada.next();
+                        // continue;
+                    // }
+                    if (inInt2 > 0 && inInt2 <= 10) {
+                        mecanismos.setCoordenadaColumna(inInt2);
+                    }else{
+                        System.out.println("Ingrese un numero dentro de los parametros pedidos.\n");
+                        // continue;
+                    }
+
+
+                }else if(mecanismos.buque[mecanismos.getCoordenadaFila()][mecanismos.getCoordenadaColumna()].getCuadritos() == "*" || mecanismos.buque[mecanismos.getCoordenadaFila()][mecanismos.getCoordenadaColumna()].getCuadritos() == "B"){
+                    System.out.println("\nLo siento. Debe ingresar coordenadas no descubiertas.");
+                    mecanismos.setCoordenadaFila(0);
+                    mecanismos.setCoordenadaColumna(0);
+                    
+                    flag = false;
+                }else{
+                    mecanismos.insertarHit(inInt1, inInt2);
+                    mecanismos.setCoordenadaFila(0);
+                    mecanismos.setCoordenadaColumna(0);
+                    // Luego de haber introducido el hit se les debe atribuir el valor 0 (o un valor menor a 1 o mayor a 10) a las variables FILA y COLUMNA, 
+                    // las cuales sirven para establecer la coordenada donde se lanzará una bomba dentro del tablero. Esto se debe hacer ya que si a las variables no se les modifica el valor anterior, en las siguientes iteraciones provocará que se salteen los condicionales if, ya que no cumplen con las condiciones para entrar
+                    //. Eso a su vez provocará un nuevo hit automatico en bucle hasta que las bombas se terminen.
+                    flag = false;
+                }
+            }
+
+            flag = true;
+            
+            if (mecanismos.getVida() == 0) {
+                System.out.println("Felicidades! Ha ganado!!");
+            }else if(mecanismos.getBombas() == 0){
+                mecanismos.mostrarTablero();
+                System.out.println("Cantidad de bombas: " + mecanismos.getBombas());
+                System.out.println("Lo siento! Ha perdido!");
+            }
+        }
+        entrada.close();
+    }
+}
+
